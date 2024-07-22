@@ -21,6 +21,8 @@ classifiers = [
 dependencies = [
     "fastapi[all]",
     "uvicorn[standard]",
+    "python-decouple",
+    "Pillow"
 ]
 
 dynamic = ["version"]
@@ -32,8 +34,8 @@ dev = [
 ]
 
 [project.urls]
-GitHub = ""
-BugTracker = ""
+GitHub = "https://github.com/r3tr0ananas/contribimg"
+BugTracker = "https://github.com/r3tr0ananas/contribimg/issues"
 
 [tool.setuptools.dynamic]
 version = { attr = "api.__version__" }
