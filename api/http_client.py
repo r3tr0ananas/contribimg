@@ -28,12 +28,12 @@ class HTTPClient:
         images = []
 
         api_request = await self.client.get(f"https://api.github.com/repos/{owner}/{repo}/contributors")
-        
+
         json_data = api_request.json()
 
         if "status" in json_data:
             return int(json_data["status"])
-        
+
         for user in json_data:
             if user["type"] == "User":
                 images.append(

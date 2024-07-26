@@ -4,19 +4,20 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     ...
 
-from fastapi import FastAPI
-from fastapi.responses import RedirectResponse, StreamingResponse, JSONResponse
-from fastapi.requests import Request
 import os
+from fastapi import FastAPI
+from fastapi.responses import RedirectResponse, StreamingResponse, JSONResponse, Response
+from fastapi.requests import Request
 
+from .image import IMG
 from . import __version__
 from .http_client import HTTPClient
-from .image import IMG
+
 
 ROOT_PATH = (lambda x: x if x is not None else "")(os.environ.get("ROOT_PATH"))
 
-http = HTTPClient()
 img = IMG()
+http = HTTPClient()
 
 app = FastAPI(
     title = "contribimg", 
@@ -37,8 +38,8 @@ async def root():
 @app.get("/{owner}/{repo}")
 async def owner_repo(
     request: Request, 
-    owner: str,
-    repo: str,
+    owner: str, 
+    repo: str, 
 ) -> StreamingResponse: 
     id = f"{owner}/{repo}"
     cache = img.get_cache(id)
@@ -57,18 +58,18 @@ async def owner_repo(
     if isinstance(images, int):
         return JSONResponse(
             {
-                "status": int,
+                "status": images, 
                 "message": "Something went wrong"
             },
             images
         )
 
-    image = img.make(id, images)
+    image_bytes = img.make(id, images)
 
-    return StreamingResponse(
-        image,
+    return Response(
+        image_bytes, 
         headers = {
             "Content-Type": "image/webp",
-            "Expires": "86400"
+            # "Expires": "86400"
         }
     )
